@@ -54,5 +54,21 @@ def addReviews():
         return make_response({'message':'Review Added Successfully'},200)
     except :
         return make_response({'message':'Could not add review'},500)
+    
+@product_bp.route('/fetch/reviews', methods=['POST'])
+def fetchReviews():
+    data = request.get_json()
+    try:
+        productId=data['productId']
+        result = db.session.execute(text('select * from review where productid = :productId'), {'productId':productId}).fetchall()
+        print(result)
+        reviews=[]
+        for review in result:
+            reviews.append({'review':review[2]})
+        
+        return make_response(reviews,200)
+    except:
+        return make_response({'message':'Could not fetch review'},500)
+
         
 
