@@ -1,6 +1,9 @@
 from flask import Blueprint, jsonify, make_response, request
+from flask_jwt_extended import jwt_required
 from models.dbinit import db
 from sqlalchemy import text
+
+from models.reviews import Review
 
 product_bp= Blueprint('product_bp', __name__)
 
@@ -29,11 +32,27 @@ def fetchProducts():
         
         for product in result:
             print(product)
-            products.append(jsonify({'productid':product[0],'title':product[1],'description':product[2], 'price':product[3],'category':product[4],'imageurl':product[4]}))
+            products.append({'productid':product[0],'title':product[1],'description':product[2], 'price':product[3],'category':product[4],'imageurl':product[5]})
         
         return make_response(products,200)
     
     except:
         return make_response(jsonify({'error': 'Error fetching products'}), 500)
+
+@product_bp.route('/add/review', methods=['POST'])
+@jwt_required()
+def addReviews():
+    data=request.get_json()
+    try:
+        review=data['review']
+        productId=data['productId']
+        customerId=data['customerId']
+        print(review)
+        cutomerReview = Review(review=review, productid=productId, customerid=customerId)
+        db.session.add(cutomerReview)
+        db.session.commit()
+        return make_response({'message':'Review Added Successfully'},200)
+    except :
+        return make_response({'message':'Could not add review'},500)
         
 

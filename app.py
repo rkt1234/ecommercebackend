@@ -7,6 +7,10 @@ from controllers.auth_controller import auth_bp
 from controllers.product_controller import product_bp
 import configs
 from models.customers import Customers 
+import configs
+from models.products import Products 
+from models.reviews import Review 
+
 # Initialize the Flask application
 app = Flask(__name__)
 
