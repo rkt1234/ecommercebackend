@@ -4,6 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_jwt_extended import JWTManager
 from models.dbinit import db
 from controllers.auth_controller import auth_bp
+from controllers.product_controller import product_bp
 import configs
 from models.customers import Customers 
 # Initialize the Flask application
@@ -25,7 +26,7 @@ jwt = JWTManager(app)
 
 # Register Blueprints
 app.register_blueprint(auth_bp, url_prefix='/auth')
-# app.register_blueprint(home_bp, url_prefix='/')
+app.register_blueprint(product_bp, url_prefix='/product')
 
 if __name__ == '__main__':
     app.run(debug=True)
