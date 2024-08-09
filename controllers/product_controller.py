@@ -47,9 +47,8 @@ def addReviews():
         review=data['review']
         productId=data['productId']
         customerId=data['customerId']
-        customerName=data['customerName']
         print(review)
-        cutomerReview = Review(review=review, productid=productId, customerid=customerId, customername=customerName)
+        cutomerReview = Review(review=review, productid=productId, customerid=customerId)
         db.session.add(cutomerReview)
         db.session.commit()
         return make_response({'message':'Review Added Successfully'},200)
@@ -65,7 +64,10 @@ def fetchReviews():
         print(result)
         reviews=[]
         for review in result:
-            reviews.append({'review':review[2], 'customerName':review[4]})
+            customerId = review[3]
+            customer = db.session.execute(text('select customername from customers where customerid = :customerId'), {'customerId':customerId}).fetchone()
+            customerName = customer[0] if customer else 'Unknown'
+            reviews.append({'review':review[2], 'customerName':customerName})
         
         return make_response(reviews,200)
     except:

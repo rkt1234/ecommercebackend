@@ -7,7 +7,6 @@ class Review(db.Model):
     productid = db.Column(db.Integer, db.ForeignKey('products.productid'), nullable=False)
     review = db.Column(db.Text, nullable=False)
     customerid = db.Column(db.Integer, db.ForeignKey('customers.customerid'), nullable=False)
-    customername = db.Column(db.Text, db.ForeignKey('customers.customerid'), nullable=False)
     
     # Relationships
     product = db.relationship('Products', backref='reviews', lazy=True)
