@@ -89,7 +89,6 @@ def addCart():
         db.session.commit()
         return make_response({'message':'Added to cart Successfully'},200)
     except Exception as e:
-        print(e)
-        # return make_response({'message':e},500)
-        return e;
+        return make_response({'message':'Could not add to cart'},500)
+        
 
