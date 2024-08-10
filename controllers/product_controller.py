@@ -1,5 +1,6 @@
 from flask import Blueprint, jsonify, make_response, request
 from flask_jwt_extended import jwt_required
+from models.cart import Cart
 from models.dbinit import db
 from sqlalchemy import text
 
@@ -73,5 +74,22 @@ def fetchReviews():
     except:
         return make_response({'message':'Could not fetch review'},500)
 
-        
+
+@product_bp.route('/add/cart', methods=['POST'])
+@jwt_required()
+def addCart():
+    data=request.get_json()
+    try:
+        customerId=data['customerId']
+        productId=data['productId']
+        quantity=data['quantity']
+        total=data['total']
+        cart = Cart(customerid=customerId, productid=productId, quantity=quantity, total=total)
+        db.session.add(cart)
+        db.session.commit()
+        return make_response({'message':'Added to cart Successfully'},200)
+    except Exception as e:
+        print(e)
+        # return make_response({'message':e},500)
+        return e;
 

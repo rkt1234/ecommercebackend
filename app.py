@@ -10,6 +10,7 @@ from models.customers import Customers
 import configs
 from models.products import Products 
 from models.reviews import Review 
+from models.cart import Cart 
 
 # Initialize the Flask application
 app = Flask(__name__)
