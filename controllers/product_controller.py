@@ -114,7 +114,7 @@ def fetchCart():
             "total":cart.total
         })
             print(product.title)
-        return cart_items
+        return make_response(cart_items,200)
         
     except:
         return make_response({'message':'Could not fetch cart'},500)
