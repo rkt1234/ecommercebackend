@@ -9,6 +9,5 @@ class Cart(db.Model):
     productid = db.Column(db.Integer, db.ForeignKey('products.productid'), nullable=False)
     quantity = db.Column(db.Integer, nullable=False, default=1)
     total = db.Column(db.Float, nullable=False)
-
     product = db.relationship('Products', backref='cart', lazy=True)
     customer = db.relationship('Customers', backref='cart', lazy=True)

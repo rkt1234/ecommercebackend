@@ -1,9 +1,10 @@
 from flask import Blueprint, jsonify, make_response, request
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import get_jwt_identity, jwt_required
 from models.cart import Cart
 from models.dbinit import db
 from sqlalchemy import text
 
+from models.products import Products
 from models.reviews import Review
 
 product_bp= Blueprint('product_bp', __name__)
@@ -90,5 +91,48 @@ def addCart():
         return make_response({'message':'Added to cart Successfully'},200)
     except Exception as e:
         return make_response({'message':'Could not add to cart'},500)
+
+@product_bp.route('/fetch/cart',methods=['GET'])
+@jwt_required()
+def fetchCart():
+    try:
+        customerId = get_jwt_identity()
+        print(customerId)
+        results = db.session.query(Cart, Products).join(Products, Cart.productid == Products.productid).filter(Cart.customerid == customerId).all()
+        cart_items = []
+        for cart, product in results:
+            cart_items.append({
+            "cartid": cart.cartid,
+            "userid": cart.customerid,
+            "productid": product.productid,
+            "quantity": cart.quantity,
+            "title": product.title,
+            "description": product.description,
+            "price": product.price,
+            "category": product.category,
+            "imageurl": product.imageurl,
+            "total":cart.total
+        })
+            print(product.title)
+        return cart_items
+        
+    except:
+        return make_response({'message':'Could not fetch cart'},500)
+    
+@product_bp.route('/update/cart', methods=['PUT'])
+@jwt_required()
+def updateCart():
+    try:
+        data=request.get_json()
+        cartid=data['cartId']
+        quantity=data['quantity']
+        total=data['total']
+        cart = Cart.query.filter_by(cartid=cartid).first()
+        cart.quantity=quantity
+        cart.total=total
+        db.session.commit()
+        return make_response({'message':'Cart updated successfully'},200)
+    except:
+        return make_response({'message':'Could not update cart'},500)
         
 
