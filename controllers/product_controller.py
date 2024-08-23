@@ -132,5 +132,18 @@ def updateCart():
         return make_response({'message':'Cart updated successfully'},200)
     except:
         return make_response({'message':'Could not update cart'},500)
+
+@product_bp.route('/delete/cart', methods=['DELETE'])
+@jwt_required()
+def deleteCart():
+    try:
+        data=request.get_json()
+        cartid=data['cartId']
+        cart = Cart.query.filter_by(cartid=cartid).first()
+        db.session.delete(cart)
+        db.session.commit()
+        return make_response({'message':'Item deleted successfully'},200)
+    except:
+        return make_response({'message':'Could not delete item'},500)
         
 
