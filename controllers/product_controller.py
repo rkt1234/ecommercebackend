@@ -79,18 +79,28 @@ def fetchReviews():
 @product_bp.route('/add/cart', methods=['POST'])
 @jwt_required()
 def addCart():
-    data=request.get_json()
+    data = request.get_json()
     try:
-        customerId=data['customerId']
-        productId=data['productId']
-        quantity=data['quantity']
-        total=data['total']
+        customerId = data['customerId']
+        productId = data['productId']
+        quantity = data['quantity']
+        total = data['total']
+        
+        # Check if the product is already in the cart
+        existing_cart_item = Cart.query.filter_by(customerid=customerId, productid=productId).first()
+        
+        if existing_cart_item:
+            return make_response({'message': 'Product is already in the cart'}, 409)  # 409 Conflict
+
+        # Add new item to the cart
         cart = Cart(customerid=customerId, productid=productId, quantity=quantity, total=total)
         db.session.add(cart)
         db.session.commit()
-        return make_response({'message':'Added to cart Successfully'},200)
+        
+        return make_response({'message': 'Added to cart Successfully'}, 200)
     except Exception as e:
-        return make_response({'message':'Could not add to cart'},500)
+        return make_response({'message': 'Could not add to cart'}, 500)
+
 
 @product_bp.route('/fetch/cart',methods=['GET'])
 @jwt_required()
