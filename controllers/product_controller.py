@@ -126,10 +126,8 @@ def updateCart():
         data=request.get_json()
         cartid=data['cartId']
         quantity=data['quantity']
-        total=data['total']
         cart = Cart.query.filter_by(cartid=cartid).first()
         cart.quantity=quantity
-        cart.total=total
         db.session.commit()
         return make_response({'message':'Cart updated successfully'},200)
     except:
