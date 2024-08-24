@@ -31,8 +31,8 @@ def register():
             'address': address,
             'customerName': customerName,
             'email': email,
-            'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=60),
-            'iat': datetime.datetime.utcnow()
+            'exp': datetime.utcnow() + datetime.timedelta(minutes=60),
+            'iat': datetime.utcnow()
         }
         access_token = create_access_token(identity=customer_id,  additional_claims=payload
     )
