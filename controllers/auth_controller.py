@@ -27,13 +27,14 @@ def register():
         db.session.commit()
         customer_id = customer.customerid
         db.session.close()
-        access_token = create_access_token(identity=customer_id,  additional_claims={
+        payload={
             'address': address,
             'customerName': customerName,
             'email': email,
             'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=60),
             'iat': datetime.datetime.utcnow()
         }
+        access_token = create_access_token(identity=customer_id,  additional_claims=payload
     )
         return make_response(jsonify({'access_token': access_token}), 200)
     except  Exception as e :
@@ -51,13 +52,14 @@ def login():
 
         if customer and password==customer.password:
             # Generate JWT token
-            access_token = create_access_token(identity=customer.customerid,  additional_claims={
+            payload={
             'address': customer.address,
             'customerName': customer.customername,
             'email': email,
             'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=60),
             'iat': datetime.datetime.utcnow()
-            })
+            }
+            access_token = create_access_token(identity=customer.customerid,  additional_claims=payload)
             return make_response(jsonify({'access_token': access_token}), 200)
         else:
             return make_response(jsonify({'message': 'Invalid email or password'}), 401)
