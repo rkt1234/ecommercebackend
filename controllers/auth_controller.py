@@ -56,8 +56,8 @@ def login():
             'address': customer.address,
             'customerName': customer.customername,
             'email': email,
-            'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=60),
-            'iat': datetime.datetime.utcnow()
+            'exp': datetime.utcnow() + datetime.timedelta(minutes=60),
+            'iat': datetime.utcnow()
             }
             access_token = create_access_token(identity=customer.customerid,  additional_claims=payload)
             return make_response(jsonify({'access_token': access_token}), 200)
