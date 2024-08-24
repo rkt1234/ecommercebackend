@@ -31,7 +31,7 @@ def register():
             'address': address,
             'customerName': customerName,
             'email': email,
-            'exp': datetime.utcnow() + datetime.timedelta(minutes=60),
+            'exp': datetime.utcnow() + timedelta(minutes=60),
             'iat': datetime.utcnow()
         }
         access_token = create_access_token(identity=customer_id,  additional_claims=payload
@@ -56,7 +56,7 @@ def login():
             'address': customer.address,
             'customerName': customer.customername,
             'email': email,
-            'exp': datetime.utcnow() + datetime.timedelta(minutes=60),
+            'exp': datetime.utcnow() + timedelta(minutes=60),  # Token expiration time (60 minutes from now)
             'iat': datetime.utcnow()
             }
             access_token = create_access_token(identity=customer.customerid,  additional_claims=payload)
