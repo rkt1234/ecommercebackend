@@ -1,7 +1,7 @@
 import hashlib
 from flask import Blueprint, jsonify, make_response, request
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
-from datetime import timedelta
+from datetime import datetime, timedelta
 from models.customers import Customers
 from models.dbinit import db
 from werkzeug.security import check_password_hash
@@ -30,7 +30,9 @@ def register():
         access_token = create_access_token(identity=customer_id,  additional_claims={
             'address': address,
             'customerName': customerName,
-            'email': email
+            'email': email,
+            'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=60),
+            'iat': datetime.datetime.utcnow()
         }
     )
         return make_response(jsonify({'access_token': access_token}), 200)
@@ -52,7 +54,9 @@ def login():
             access_token = create_access_token(identity=customer.customerid,  additional_claims={
             'address': customer.address,
             'customerName': customer.customername,
-            'email': email
+            'email': email,
+            'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=60),
+            'iat': datetime.datetime.utcnow()
             })
             return make_response(jsonify({'access_token': access_token}), 200)
         else:
