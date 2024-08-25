@@ -162,14 +162,17 @@ def deleteCart():
 @jwt_required()
 def placeOrder():
     try:
+        print("yaha aa chuka h ");
         data=request.get_json()
         customerId=data['customerId']
         items=data['items']
         deliveryAddress=data['deliveryAddress']
         order = Order(customerid=customerId, date=datetime.now(), items=items, deliveryaddress=deliveryAddress)
-        # Add to the session and commit
         db.session.add(order)
         db.session.commit()
         return make_response({'message':'Order placed successfully'},200)
-    except:
-        return make_response({'message':'Could not place order'},500)
+    
+    except Exception as e:
+        # Log the full stack trace if needed
+        # Return the exception message
+        return make_response({'message': str(e)}, 500)
