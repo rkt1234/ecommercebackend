@@ -167,7 +167,7 @@ def placeOrder():
         customerId=data['customerId']
         items=data['items']
         deliveryAddress=data['deliveryAddress']
-        order = Order(customerid=customerId, date=datetime.now(), items=items, deliveryaddress=deliveryAddress)
+        order = Order(customerid=customerId, date=datetime.utcnow(), items=items, deliveryaddress=deliveryAddress)
         db.session.add(order)
         db.session.commit()
         return make_response({'message':'Order placed successfully'},200)
