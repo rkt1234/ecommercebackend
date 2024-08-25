@@ -1,9 +1,11 @@
+import datetime
 from flask import Blueprint, jsonify, make_response, request
 from flask_jwt_extended import get_jwt_identity, jwt_required
 from models.cart import Cart
 from models.dbinit import db
 from sqlalchemy import text
 
+from models.orders import Order
 from models.products import Products
 from models.reviews import Review
 
@@ -155,5 +157,19 @@ def deleteCart():
         return make_response({'message':'Item deleted successfully'},200)
     except:
         return make_response({'message':'Could not delete item'},500)
-        
-
+    
+@product_bp.route('/place/order', methods=['POST'])
+@jwt_required()
+def placeOrder():
+    try:
+        data=request.get_json()
+        customerId=data['customerId']
+        items=data['items']
+        deliveryAddress=data['deliveryAddress']
+        order = Order(customerid=customerId, orderdate=datetime.now(), items=items, deliveryaddress=deliveryAddress)
+        # Add to the session and commit
+        db.session.add(order)
+        db.session.commit()
+        return make_response({'message':'Order placed successfully'},200)
+    except:
+        return make_response({'message':'Could not place order'},500)

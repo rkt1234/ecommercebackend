@@ -11,7 +11,7 @@ import configs
 from models.products import Products 
 from models.reviews import Review 
 from models.cart import Cart 
-
+from models.orders import Order 
 # Initialize the Flask application
 app = Flask(__name__)
 
