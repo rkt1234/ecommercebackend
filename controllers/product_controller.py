@@ -166,7 +166,7 @@ def placeOrder():
         customerId=data['customerId']
         items=data['items']
         deliveryAddress=data['deliveryAddress']
-        order = Order(customerid=customerId, orderdate=datetime.now(), items=items, deliveryaddress=deliveryAddress)
+        order = Order(customerid=customerId, date=datetime.now(), items=items, deliveryaddress=deliveryAddress)
         # Add to the session and commit
         db.session.add(order)
         db.session.commit()
