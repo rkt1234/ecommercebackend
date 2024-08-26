@@ -167,12 +167,14 @@ def placeOrder():
         customerId=data['customerId']
         items=data['items']
         deliveryAddress=data['deliveryAddress']
-        order = Order(customerid=customerId, date=datetime.utcnow(), items=items, deliveryaddress=deliveryAddress)
+        date=data['date']
+        order = Order(customerid=customerId, date=date, items=items, deliveryaddress=deliveryAddress)
         db.session.add(order)
         db.session.commit()
         return make_response({'message':'Order placed successfully'},200)
     
     except Exception as e:
+
         # Log the full stack trace if needed
         # Return the exception message
         return make_response({'message': str(e)}, 500)
