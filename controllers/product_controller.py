@@ -160,21 +160,33 @@ def deleteCart():
     
 @product_bp.route('/place/order', methods=['POST'])
 @jwt_required()
-def placeOrder():
+def placeOrderAndClearCart():
     try:
-        print("yaha aa chuka h ");
-        data=request.get_json()
-        customerId=data['customerId']
-        items=data['items']
-        deliveryAddress=data['deliveryAddress']
-        date=data['date']
-        order = Order(customerid=customerId, date=date, items=items, deliveryaddress=deliveryAddress)
-        db.session.add(order)
-        db.session.commit()
-        return make_response({'message':'Order placed successfully'},200)
-    
-    except Exception as e:
+        data = request.get_json()
+        customerId = data['customerId']
+        items = data['items']
+        deliveryAddress = data['deliveryAddress']
+        date = data['date']
+        cartIds = data['cartIds']
 
-        # Log the full stack trace if needed
-        # Return the exception message
-        return make_response({'message': str(e)}, 500)
+        # Begin a transaction
+        with db.session.begin_nested():
+            # Place order
+            order = Order(customerid=customerId, date=date, items=items, deliveryaddress=deliveryAddress)
+            db.session.add(order)
+            db.session.flush()  # Flush to get the order ID before clearing the cart
+
+            # Clear cart items if cartIds are provided
+            if cartIds:
+                Cart.query.filter(Cart.id.in_(cartIds)).delete(synchronize_session=False)
+
+            # Commit the changes
+            db.session.commit()
+
+        return make_response({'message': 'Order placed and cart cleared successfully'}, 200)
+
+    except :
+        db.session.rollback()  # Rollback in case of an error
+        return make_response({'message': "Could not place order"}, 500)
+
+
