@@ -172,7 +172,7 @@ def placeOrderAndClearCart():
         # Begin a transaction
         with db.session.begin_nested():
             # Place order
-            order = Order(customerid=customerId, date=date, items=items, deliveryaddress=deliveryAddress)
+            order = Order(customerid=customerId, items=items, deliveryaddress=deliveryAddress)
             db.session.add(order)
             db.session.flush()  # Flush to get the order ID before clearing the cart
 

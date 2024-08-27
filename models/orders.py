@@ -10,6 +10,5 @@ class Order(db.Model):
     orderid = db.Column(db.Integer, primary_key=True, autoincrement=True)
     deliveryaddress = db.Column(db.Text, nullable=False)
     items = db.Column(JSONB, nullable=False)  # Map<String, dynamic> stored as JSONB
-    date = db.Column(db.Text, nullable=False)
     customerid = db.Column(db.Integer, db.ForeignKey('customers.customerid'), nullable=False)
     customer = db.relationship('Customers', backref='orders', lazy=True)
