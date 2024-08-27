@@ -189,4 +189,17 @@ def placeOrderAndClearCart():
         db.session.rollback()  # Rollback in case of an error
         return make_response({'message': "Could not place order"}, 500)
 
+@product_bp.route('/fetch/orders', methods=['GET'])
+@jwt_required()
+def fetchOrders():
+    try:
+        customerId = get_jwt_identity()
+        orders = Order.query.filter_by(customerid=customerId).all()
+        # print(orders)
+        return make_response({'orders': orders}, 200)
+    except:
+        return make_response({'message': "Could not fetch orders"}, 500)
+
+
+
 
