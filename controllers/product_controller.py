@@ -178,7 +178,7 @@ def placeOrderAndClearCart():
 
             # Clear cart items if cartIds are provided
             if cartIds:
-                Cart.query.filter(Cart.id.in_(cartIds)).delete(synchronize_session=False)
+                Cart.query.filter(Cart.cartid.in_(cartIds)).delete(synchronize_session=False)
 
             # Commit the changes
             db.session.commit()
