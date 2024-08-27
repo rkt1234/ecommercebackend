@@ -195,10 +195,15 @@ def fetchOrders():
     try:
         customerId = get_jwt_identity()
         orders = Order.query.filter_by(customerid=customerId).all()
-        # print(orders)
-        return make_response({'orders': orders}, 200)
-    except:
-        return make_response({'message': "Could not fetch orders"}, 500)
+        print(orders)
+        order=[]
+        for item in orders:
+            for prod in item.items:
+                order.append(prod)
+        print(order)
+        return make_response({'orders': order}, 200)
+    except Exception as e:
+        return make_response({'message': 'Could not fetch orders'}, 500)
 
 
 
